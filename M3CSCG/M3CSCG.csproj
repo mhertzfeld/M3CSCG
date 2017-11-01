@@ -53,6 +53,15 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="M3ApiClientInterface">
+      <HintPath>..\Library\M3ApiClientInterface\M3ApiClientInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="MvxSockNSignedX64">
+      <HintPath>..\Library\M3ApiClientInterface\MvxSockNSignedX64.dll</HintPath>
+    </Reference>
+    <Reference Include="MyClassLibrary">
+      <HintPath>..\Library\MyClassLibrary\MyClassLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
