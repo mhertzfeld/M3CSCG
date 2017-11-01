@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("M3CSCG")]
 [assembly: AssemblyDescription("M3 C# Code Generator")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Matthew Hertzfeld")]
 [assembly: AssemblyProduct("M3CSCG")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
