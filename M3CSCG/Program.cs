@@ -58,7 +58,7 @@ namespace M3CSCG
 
                             foreach (LstFieldsData _LstFieldsData in _DataObjectCollectionReaderProcess.DataObjectCollection.OrderBy(element => element.FieldDescription))
                             {
-                                String _PropertyName = GeneratePropertyName(_LstFieldsData.FieldDescription);
+                                String _PropertyName = GeneratePropertyName(_LstFieldsData);
 
                                 //INITIALIZE
                                 String _Initialize = Resources.Template_Initialize;
@@ -155,7 +155,7 @@ namespace M3CSCG
                                         throw new ValueOutOfRangeException("_LstFieldsData.FieldType");
                                 }
 
-                                String _PropertyName = GeneratePropertyName(_LstFieldsData.FieldDescription);
+                                String _PropertyName = GeneratePropertyName(_LstFieldsData);
 
                                 _ContentLine = _ContentLine.Replace(Resources.Parameter_Name, _PropertyName);
 
@@ -187,16 +187,22 @@ namespace M3CSCG
         }
 
 
-        private static String GeneratePropertyName(String _Input)
+        private static String GeneratePropertyName(LstFieldsData _LstFieldsData)
         {
-            _Input = RemoveAndReplaceWithUpper(_Input, @" ");
-            _Input = RemoveAndReplaceWithUpper(_Input, @"-");
-            _Input = RemoveAndReplaceWithUpper(_Input, @"/");
-            _Input = RemoveAndReplaceWithUpper(_Input, @"\");
-            _Input = RemoveAndReplaceWithUpper(_Input, @"(");
-            _Input = RemoveAndReplaceWithUpper(_Input, @")");
-
-            return _Input;
+            if (_LstFieldsData.FieldDescription == null)
+            { return _LstFieldsData.FieldName; }
+            else
+            {
+                String _PropertyName = _LstFieldsData.FieldDescription;
+                _PropertyName = RemoveAndReplaceWithUpper(_PropertyName, @" ");
+                _PropertyName = RemoveAndReplaceWithUpper(_PropertyName, @"'");
+                _PropertyName = RemoveAndReplaceWithUpper(_PropertyName, @"-");
+                _PropertyName = RemoveAndReplaceWithUpper(_PropertyName, @"/");
+                _PropertyName = RemoveAndReplaceWithUpper(_PropertyName, @"\");
+                _PropertyName = RemoveAndReplaceWithUpper(_PropertyName, @"(");
+                _PropertyName = RemoveAndReplaceWithUpper(_PropertyName, @")");
+                return _PropertyName;
+            }
         }
 
         private static String RemoveAndReplaceWithUpper(String _Text, String _ToRemove)
