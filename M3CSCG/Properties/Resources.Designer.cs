@@ -70,6 +70,15 @@ namespace M3CSCG.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to @Constructor.
+        /// </summary>
+        internal static string Parameter_Constructor {
+            get {
+                return ResourceManager.GetString("Parameter_Constructor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @Contents.
         /// </summary>
         internal static string Parameter_Contents {
@@ -84,15 +93,6 @@ namespace M3CSCG.Properties {
         internal static string Parameter_FieldName {
             get {
                 return ResourceManager.GetString("Parameter_FieldName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to @Initialize.
-        /// </summary>
-        internal static string Parameter_Initialize {
-            get {
-                return ResourceManager.GetString("Parameter_Initialize", resourceCulture);
             }
         }
         
@@ -161,28 +161,32 @@ namespace M3CSCG.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to using Lawson.M3.MvxSock;
-        ///using MyClassLibrary;
+        ///using M3ApiClientInterface;
         ///using System;
         ///
         ///
         ///namespace @NameSpace
         ///{
         ///    class @Class
+        ///		: M3ApiClientInterface.DataObjectInterface
         ///    {
-        ///		//PROPERTIES
+        ///		#region PROPERTIES
         ///@Properties
+        ///		#endregion
         ///
-        ///		//INITIALIZE
+        ///		#region CONSTRUCTOR
         ///		public @Class()
         ///		{
-        ///@Initialize
+        ///@Constructor
         ///		}
+        ///		#endregion
         ///
-        ///		//METHODS
+        ///		#region METHODS
         ///		public void SetFields(ref SERVER_ID _ServerId)
         ///		{
         ///@SetFields
         ///		}
+        ///		#endregion
         ///    }
         ///}.
         /// </summary>
@@ -204,9 +208,18 @@ namespace M3CSCG.Properties {
         /// <summary>
         ///   Looks up a localized string similar to             @Property = null;.
         /// </summary>
-        internal static string Template_Initialize {
+        internal static string Template_Initialize_Reference {
             get {
-                return ResourceManager.GetString("Template_Initialize", resourceCulture);
+                return ResourceManager.GetString("Template_Initialize_Reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to             @Property = 0;.
+        /// </summary>
+        internal static string Template_Initialize_Value {
+            get {
+                return ResourceManager.GetString("Template_Initialize_Value", resourceCulture);
             }
         }
         
@@ -238,7 +251,7 @@ namespace M3CSCG.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to             @Property = MyDataConverter.ToDateTimeNullable(MvxSock.GetField(ref _ServerId, &quot;@FieldName&quot;), &quot;yyyyMMdd&quot;);.
+        ///   Looks up a localized string similar to             @Property = DataConverter.ToDateTimeNullable(MvxSock.GetField(ref _ServerId, &quot;@FieldName&quot;), &quot;yyyyMMdd&quot;);.
         /// </summary>
         internal static string Template_SetField_Date {
             get {
@@ -247,7 +260,7 @@ namespace M3CSCG.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to             @Property = MyDataConverter.ToDecimalNullable(MvxSock.GetField(ref _ServerId, &quot;@FieldName&quot;));.
+        ///   Looks up a localized string similar to             @Property = DataConverter.ToDecimal(MvxSock.GetField(ref _ServerId, &quot;@FieldName&quot;));.
         /// </summary>
         internal static string Template_SetField_Decimal {
             get {
@@ -256,7 +269,16 @@ namespace M3CSCG.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to             @Property = MyDataConverter.ToString(MvxSock.GetField(ref _ServerId, &quot;@FieldName&quot;));.
+        ///   Looks up a localized string similar to             @Property = DataConverter.ToDecimalNullable(MvxSock.GetField(ref _ServerId, &quot;@FieldName&quot;));.
+        /// </summary>
+        internal static string Template_SetField_DecimalNullable {
+            get {
+                return ResourceManager.GetString("Template_SetField_DecimalNullable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to             @Property = DataConverter.ToString(MvxSock.GetField(ref _ServerId, &quot;@FieldName&quot;));.
         /// </summary>
         internal static string Template_SetField_String {
             get {

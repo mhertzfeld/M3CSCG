@@ -1,5 +1,5 @@
 ﻿using Lawson.M3.MvxSock;
-using MyClassLibrary;
+using M3ApiClientInterface;
 using System;
 
 
@@ -46,19 +46,19 @@ namespace M3CSCG.M3.MRS001MI
         //METHODS
         public void SetFields(ref SERVER_ID _ServerId)
         {
-            FieldDescription = MyDataConverter.ToString(MvxSock.GetField(ref _ServerId, "FLDS"));
+            FieldDescription = DataConverter.ToString(MvxSock.GetField(ref _ServerId, "FLDS"));
 
-            FieldName = MyDataConverter.ToString(MvxSock.GetField(ref _ServerId, "FLNM"));
+            FieldName = DataConverter.ToString(MvxSock.GetField(ref _ServerId, "FLNM"));
 
-            FieldType = MyDataConverter.ToString(MvxSock.GetField(ref _ServerId, "TYPE"));
+            FieldType = DataConverter.ToString(MvxSock.GetField(ref _ServerId, "TYPE"));
 
-            InputOutput = MyDataConverter.ToString(MvxSock.GetField(ref _ServerId, "TRTP"));
+            InputOutput = DataConverter.ToString(MvxSock.GetField(ref _ServerId, "TRTP"));
 
-            Length = MyDataConverter.ToString(MvxSock.GetField(ref _ServerId, "LENG"));
+            Length = DataConverter.ToString(MvxSock.GetField(ref _ServerId, "LENG"));
 
-            ProgramName = MyDataConverter.ToString(MvxSock.GetField(ref _ServerId, "MINM"));
+            ProgramName = DataConverter.ToString(MvxSock.GetField(ref _ServerId, "MINM"));
 
-            TransactionName = MyDataConverter.ToString(MvxSock.GetField(ref _ServerId, "TRNM"));
+            TransactionName = DataConverter.ToString(MvxSock.GetField(ref _ServerId, "TRNM"));
         }
     }
 }

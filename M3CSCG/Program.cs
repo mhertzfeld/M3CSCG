@@ -1,7 +1,6 @@
 ﻿using M3ApiClientInterface;
 using M3CSCG.M3.MRS001MI;
 using M3CSCG.Properties;
-using MyClassLibrary;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,18 +24,27 @@ namespace M3CSCG
         ///     6 Class\Interface
         ///     7 Namespace
         ///     8 Class\Interface Name
-        ///     9 Output Directory
+        ///     9 Box Value Types (Y/N)
+        ///     10 Output Directory
         /// </summary>
         /// <param name="_Args"></param>
         static void Main(string[] _Args)
         {
             try
             {
+                Boolean _BoxValueTypes;
+                if (_Args[9].Equals("Y", StringComparison.InvariantCultureIgnoreCase))
+                { _BoxValueTypes = true; }
+                else if (_Args[9].Equals("N", StringComparison.InvariantCultureIgnoreCase))
+                { _BoxValueTypes = false; }
+                else
+                { throw new Exception("Parameter for Box Value Types is invalid."); }
+
                 DataObjectCollectionReaderProcess<LstFieldsData, List<LstFieldsData>> _DataObjectCollectionReaderProcess = new DataObjectCollectionReaderProcess<LstFieldsData, List<LstFieldsData>>();
                 _DataObjectCollectionReaderProcess.ApiData.Api = "MRS001MI";
                 _DataObjectCollectionReaderProcess.ApiData.Method = "LstFields";
                 _DataObjectCollectionReaderProcess.ConnectionData.Password = _Args[3];
-                _DataObjectCollectionReaderProcess.ConnectionData.Port = MyDataConverter.ToUInt16(_Args[1]);
+                _DataObjectCollectionReaderProcess.ConnectionData.Port = Convert.ToUInt16(_Args[1]);
                 _DataObjectCollectionReaderProcess.ConnectionData.Server = _Args[0];
                 _DataObjectCollectionReaderProcess.ConnectionData.UserName = _Args[2];
                 _DataObjectCollectionReaderProcess.RequestFieldDataList.Add(new RequestFieldData("MINM", _Args[4]));
@@ -44,6 +52,9 @@ namespace M3CSCG
                 _DataObjectCollectionReaderProcess.RequestFieldDataList.Add(new RequestFieldData("TRTP", "O"));
                 if (_DataObjectCollectionReaderProcess.ExecuteProcess())
                 {
+                    if ((_DataObjectCollectionReaderProcess.DataObjectCollection == null) || (_DataObjectCollectionReaderProcess.DataObjectCollection.Count == 0))
+                    { throw new Exception(String.Format("Invalid API.  Program:{0} Tranasaction:{1}", _Args[4], _Args[5])); }
+
                     String _Output = null;
 
                     switch (_Args[6])
@@ -58,23 +69,22 @@ namespace M3CSCG
 
                             foreach (LstFieldsData _LstFieldsData in _DataObjectCollectionReaderProcess.DataObjectCollection.OrderBy(element => element.FieldDescription))
                             {
-                                String _PropertyName = GeneratePropertyName(_LstFieldsData);
 
-                                //INITIALIZE
-                                String _Initialize = Resources.Template_Initialize;
-                                _Initialize = _Initialize.Replace(Resources.Parameter_Property, _PropertyName);
 
-                                _InitializeStringBuilder.AppendLine(_Initialize);
-                                _InitializeStringBuilder.AppendLine();
+                                //String _Initialize = Resources.Template_Initialize_Reference;
+                                String _Initialize = null;
 
-                                //PROPERTY
                                 String _Property = null;
+
+                                String _PropertyName = GeneratePropertyName(_LstFieldsData);
 
                                 String _SetField = null;
 
                                 switch (_LstFieldsData.FieldType)
                                 {
                                     case "A":
+
+                                        _Initialize = Resources.Template_Initialize_Reference;
 
                                         _Property = Resources.Template_ClassProperty.Replace(Resources.Parameter_Type, @"String");
 
@@ -84,6 +94,8 @@ namespace M3CSCG
 
                                     case "D":
 
+                                        _Initialize = Resources.Template_Initialize_Reference;
+
                                         _Property = Resources.Template_ClassProperty.Replace(Resources.Parameter_Type, @"DateTime?");
 
                                         _SetField = Resources.Template_SetField_Date.Replace(Resources.Parameter_FieldName, _LstFieldsData.FieldName);
@@ -92,16 +104,34 @@ namespace M3CSCG
 
                                     case "N":
 
-                                        _Property = Resources.Template_ClassProperty.Replace(Resources.Parameter_Type, @"Decimal?");
+                                        if (_BoxValueTypes)
+                                        {
+                                            _Initialize = Resources.Template_Initialize_Reference;
 
-                                        _SetField = Resources.Template_SetField_Decimal.Replace(Resources.Parameter_FieldName, _LstFieldsData.FieldName);
+                                            _Property = Resources.Template_ClassProperty.Replace(Resources.Parameter_Type, @"Decimal?");
+
+                                            _SetField = Resources.Template_SetField_DecimalNullable.Replace(Resources.Parameter_FieldName, _LstFieldsData.FieldName);
+                                        }
+                                        else
+                                        {
+                                            _Initialize = Resources.Template_Initialize_Value;
+
+                                            _Property = Resources.Template_ClassProperty.Replace(Resources.Parameter_Type, @"Decimal");
+
+                                            _SetField = Resources.Template_SetField_Decimal.Replace(Resources.Parameter_FieldName, _LstFieldsData.FieldName);
+                                        }                                       
 
                                         break;
 
                                     default:
 
-                                        throw new ValueOutOfRangeException("_LstFieldsData.FieldType");
+                                        throw new Exception("Out of Range Value for '_LstFieldsData.FieldType'.");
                                 }
+
+                                _Initialize = _Initialize.Replace(Resources.Parameter_Property, _PropertyName);
+
+                                _InitializeStringBuilder.AppendLine(_Initialize);
+                                _InitializeStringBuilder.AppendLine();
 
                                 _Property = _Property.Replace(Resources.Parameter_Name, _PropertyName);
 
@@ -118,7 +148,7 @@ namespace M3CSCG
                             _Output = _Output.Replace(Resources.Parameter_NameSpace, _Args[7]);
                             _Output = _Output.Replace(Resources.Parameter_Class, _Args[8]);
                             _Output = _Output.Replace(Resources.Parameter_Properties, _PropertiesStringBuilder.ToString());
-                            _Output = _Output.Replace(Resources.Parameter_Initialize, _InitializeStringBuilder.ToString());
+                            _Output = _Output.Replace(Resources.Parameter_Constructor, _InitializeStringBuilder.ToString());
                             _Output = _Output.Replace(Resources.Parameter_SetFields, _SetFieldsStringBuilder.ToString());
 
                             break;
@@ -146,13 +176,16 @@ namespace M3CSCG
 
                                     case "N":
 
-                                        _ContentLine = _ContentLine.Replace(Resources.Parameter_Type, @"Decimal?");
+                                        if (_BoxValueTypes)
+                                        { _ContentLine = Resources.Template_ClassProperty.Replace(Resources.Parameter_Type, @"Decimal?"); }
+                                        else
+                                        { _ContentLine = Resources.Template_ClassProperty.Replace(Resources.Parameter_Type, @"Decimal"); }
 
                                         break;
 
                                     default:
 
-                                        throw new ValueOutOfRangeException("_LstFieldsData.FieldType");
+                                        throw new Exception("Out of Range Value for '_LstFieldsData.FieldType'.");
                                 }
 
                                 String _PropertyName = GeneratePropertyName(_LstFieldsData);
@@ -172,10 +205,10 @@ namespace M3CSCG
 
                         default:
 
-                            throw new ValueOutOfRangeException("_Args[6]");
+                            throw new Exception("_Args[6]");
                     }
 
-                    File.WriteAllText(String.Format(@"{0}\{1}.cs", _Args[9], _Args[8]), _Output);
+                    File.WriteAllText(String.Format(@"{0}\{1}.cs", _Args[10], _Args[8]), _Output);
                 }
             }
             catch (Exception _Exception)
